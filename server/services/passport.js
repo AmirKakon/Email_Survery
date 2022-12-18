@@ -19,8 +19,14 @@ passport.use(
             .then((existingUser) => 
                 {
                     if(!existingUser) {
-                        //create an instance (record) and saves it in the database.
-                        new User({googleId: profile.id}).save();
+                        //create an instance (record) and saves it in the database. Once user is created then func is done
+                        new User({googleId: profile.id}).save()
+                        .then(user => done(null, user));
+                        
+                    }
+                    else{
+                        //user already exists. no need to wait and done.
+                        done(null, existingUser);
                     }
                 }
             );
