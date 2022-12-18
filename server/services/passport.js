@@ -14,8 +14,16 @@ passport.use(
             callbackURL: '/auth/google/callback'
         }, 
         (accessToken, refreshToken, profile, done) => {
-            //create an instance (record) and saves it in the database.
-            new User({googleId: profile.id}).save();
+            //checks if user exists in DB.
+            User.findOne({googleId: profile.id})
+            .then((existingUser) => 
+                {
+                    if(!existingUser) {
+                        //create an instance (record) and saves it in the database.
+                        new User({googleId: profile.id}).save();
+                    }
+                }
+            );
         }
     )
 );
