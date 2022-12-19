@@ -9,7 +9,9 @@
   },
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "run_prod": "railway up",
+    "end_prod": "railway down"
   },
   "author": "",
   "license": "ISC",
