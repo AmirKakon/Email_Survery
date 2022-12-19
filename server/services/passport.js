@@ -6,6 +6,23 @@ const keys = require('../config/keys');
 //fetching the users model
 const User = mongoose.model('users');
 
+passport.serializeUser((user, done) => 
+    {   
+        done(null, user.id);
+    }
+);
+
+passport.deserializeUser((id, done) => 
+    {
+        User.findById(id)
+        .then(user => 
+            { 
+                done(null, user)
+            }
+        );
+    }
+);
+
 passport.use(
     new GoogleStrategy(
         {
@@ -13,23 +30,24 @@ passport.use(
             clientSecret: keys.googleClientSecret,
             callbackURL: '/auth/google/callback'
         }, 
-        (accessToken, refreshToken, profile, done) => {
-            //checks if user exists in DB.
-            User.findOne({googleId: profile.id})
-            .then((existingUser) => 
-                {
-                    if(!existingUser) {
-                        //create an instance (record) and saves it in the database. Once user is created then func is done
-                        new User({googleId: profile.id}).save()
-                        .then(user => done(null, user));
-                        
+        (accessToken, refreshToken, profile, done) => 
+            {
+                //checks if user exists in DB.
+                User.findOne({googleId: profile.id})
+                .then((existingUser) => 
+                    {
+                        if(!existingUser) {
+                            //create an instance (record) and saves it in the database. Once user is created then func is done
+                            new User({googleId: profile.id}).save()
+                            .then(user => done(null, user));
+                            
+                        }
+                        else{
+                            //user already exists. no need to wait and done.
+                            done(null, existingUser);
+                        }
                     }
-                    else{
-                        //user already exists. no need to wait and done.
-                        done(null, existingUser);
-                    }
-                }
-            );
-        }
+                );
+            }
     )
 );
