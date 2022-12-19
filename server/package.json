@@ -14,7 +14,7 @@
     "end_prod_server": "railway down",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "prod": "concurrently \"npm run start_prod_server\" \"npm run client\""
+    "prod": "concurrently \"npm run start_prod_server\" \"npm run build --prefix client\""
   },
   "author": "",
   "license": "ISC",
