@@ -12,7 +12,8 @@ const App = () =>
             <div>
                 <BrowserRouter>
                     <div>
-                        <Route path="/" component={Landing} />
+                        <Route path="/" component={Landing} exact/>
+                        <Route path="/surveys" component={Dashboard} />
                     </div>
                 </BrowserRouter>
             </div>
