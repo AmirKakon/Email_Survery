@@ -10,7 +10,11 @@ const App = () =>
     {
         return (
             <div>
-                Hi There!
+                <BrowserRouter>
+                    <div>
+                        <Route path="/" component={Landing} />
+                    </div>
+                </BrowserRouter>
             </div>
         );
     };
