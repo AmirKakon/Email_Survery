@@ -31,24 +31,17 @@ passport.use(
             callbackURL: '/auth/google/callback',
             proxy: true
         }, 
-        (accessToken, refreshToken, profile, done) => 
+        async (accessToken, refreshToken, profile, done) => 
             {
                 //checks if user exists in DB.
-                User.findOne({googleId: profile.id})
-                .then((existingUser) => 
-                    {
-                        if(!existingUser) {
-                            //create an instance (record) and saves it in the database. Once user is created then func is done
-                            new User({googleId: profile.id}).save()
-                            .then(user => done(null, user));
-                            
-                        }
-                        else{
-                            //user already exists. no need to wait and done.
-                            done(null, existingUser);
-                        }
-                    }
-                );
+                const existingUser = await User.findOne({googleId: profile.id})
+
+                if(existingUser) {
+                    return done(null, existingUser);
+                }
+
+                const user = await new User({googleId: profile.id}).save()
+                done(null, user);
             }
     )
 );
