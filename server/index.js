@@ -23,6 +23,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 // default port is 5000 (for development purposes)
 const PORT = process.env.PORT || 5000;
