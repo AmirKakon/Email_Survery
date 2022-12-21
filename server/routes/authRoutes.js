@@ -24,7 +24,7 @@ module.exports = (app) => {
     app.get('/api/logout', (req, res) =>
         {
             req.logout();
-            res.send(req.user); //shows empty user because we are logged out.
+            res.redirect('/');
         }
     );
 
