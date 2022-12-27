@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import {reduxForm, Field} from 'redux-form';
 
-export default () => {
+export default ({input}) => {  // {input} == props.input
     return (
         <div>
-            SurveyField!
+            <input {...input} />
         </div>
     );
 }
