@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import {reduxForm, Field} from 'redux-form';
+import React from "react";
 
-export default ({input}) => {  // {input} == props.input
+export default ({input, label}) => {  // {input} == props.input
     return (
         <div>
+            <label>{label}</label>
             <input {...input} />
         </div>
     );
