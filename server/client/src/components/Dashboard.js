@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { connect } from 'react-redux';
+import React from "react";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
@@ -7,9 +6,9 @@ const Dashboard = () => {
         <div>
             Dashboard
             <div className="fixed-action-btn">
-                <a className="btn-floating btn-large red">
+                <Link className="btn-floating btn-large red" to='/surveys/new'>
                     <i class="material-icons">add</i>
-                </a>
+                </Link>
             </div>
 
         </div>
