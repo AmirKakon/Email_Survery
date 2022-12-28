@@ -11,7 +11,7 @@ const Survey = mongoose.model('surveys');
 
 module.exports = app => 
 {
-    app.get('/api/surveys/thanks', (req, res) => {
+    app.get('/api/surveys/:surveyId/:choice', (req, res) => {
         res.send('Thanks for voting!');
     });
 
@@ -46,7 +46,8 @@ module.exports = app =>
                     //recipients.$.responded => the $ means there are many records in the subCollection 'recipients' and the $ will match the $elemMatch record 
                     {
                         $inc: {[choice]: 1},
-                        $set: {'recipients.$.responded': true}
+                        $set: {'recipients.$.responded': true},
+                        lastResponded: new Date()
                     }
                 ).exec();
             })
