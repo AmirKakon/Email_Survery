@@ -18,7 +18,7 @@ module.exports = app =>
     app.post('/api/surveys/webhooks', (req, res) => {
         const p = new Path('/api/surveys/:surveyId/:choice');
 
-        const events = _.chain(req.body)
+        _.chain(req.body)
             .map(({email, url}) => {
                 const match = p.test(new URL(url).pathname);
 
@@ -28,9 +28,29 @@ module.exports = app =>
             })
             .compact()
             .uniqBy('email', 'surveyId')
+            .each(({surveyId, email, choice}) => {
+                //all the changes are being implemented in MongoDB
+                Survey.updateOne(
+                    //finds one record that matches the criteria
+                    //$elemMatch = specific record in subCollection
+                    {
+                        _id: surveyId,
+                        recipients: {
+                            $elemMatch: {email: email, responded: false}
+                        }
+                    }, 
+                    //updates to following values
+                    //$inc (mongo operator for incrementing) = find choice value and increment by 1
+                    // [choice] = 'yes' or 'no' (choice variables value)
+                    // $set = set/update one of the properties found in record
+                    //recipients.$.responded => the $ means there are many records in the subCollection 'recipients' and the $ will match the $elemMatch record 
+                    {
+                        $inc: {[choice]: 1},
+                        $set: {'recipients.$.responded': true}
+                    }
+                ).exec();
+            })
             .value();
-
-        console.log(events);
 
         res.send({});
     });
@@ -63,24 +83,3 @@ module.exports = app =>
         }
     });
 };
-
-//all the changes are being implemented in MongoDB
-Survey.updateOne(
-    //finds one record that matches the criteria
-    //$elemMatch = specific record in subCollection
-    {
-        id:surveyId,
-        recipients: {
-            $elemMatch: {email:email, responded: false}
-        }
-    }, 
-    //updates to following values
-    //$inc (mongo operator for incrementing) = find choice value and increment by 1
-    // [choice] = 'yes' or 'no' (choice variables value)
-    // $set = set/update one of the properties found in record
-    //recipients.$.responded => the $ means there are many records in the subCollection 'recipients' and the $ will match the $elemMatch record 
-    {
-        $inc: {[choice]: 1},
-        $set: {'recipients.$.responded': true}
-    }
-);
