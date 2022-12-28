@@ -64,12 +64,23 @@ module.exports = app =>
     });
 };
 
-
-Survey.updateOne({
-    id:surveyId,
-    recipients: {
-        $elemMatch: {email:email, responded: false}
+//all the changes are being implemented in MongoDB
+Survey.updateOne(
+    //finds one record that matches the criteria
+    //$elemMatch = specific record in subCollection
+    {
+        id:surveyId,
+        recipients: {
+            $elemMatch: {email:email, responded: false}
+        }
+    }, 
+    //updates to following values
+    //$inc (mongo operator for incrementing) = find choice value and increment by 1
+    // [choice] = 'yes' or 'no' (choice variables value)
+    // $set = set/update one of the properties found in record
+    //recipients.$.responded => the $ means there are many records in the subCollection 'recipients' and the $ will match the $elemMatch record 
+    {
+        $inc: {[choice]: 1},
+        $set: {'recipients.$.responded': true}
     }
-}, {
-    
-});
+);
